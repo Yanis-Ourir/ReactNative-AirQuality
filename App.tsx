@@ -6,12 +6,14 @@
  */
 
 import React from 'react';
+import {useState, useEffect} from 'react';
 import type {PropsWithChildren} from 'react';
 import {
   SafeAreaView,
   ScrollView,
   StatusBar,
   StyleSheet,
+  Button,
   Text,
   useColorScheme,
   View,
@@ -25,74 +27,60 @@ import {
   ReloadInstructions,
 } from 'react-native/Libraries/NewAppScreen';
 
-type SectionProps = PropsWithChildren<{
-  title: string;
-}>;
+import AirQuality from './components/AirQuality';
+import GraphQuality from "./components/GraphQuality.tsx";
 
-function Section({children, title}: SectionProps): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
-  return (
-    <View style={styles.sectionContainer}>
-      <Text
-        style={[
-          styles.sectionTitle,
-          {
-            color: isDarkMode ? Colors.white : Colors.black,
-          },
-        ]}>
-        {title}
-      </Text>
-      <Text
-        style={[
-          styles.sectionDescription,
-          {
-            color: isDarkMode ? Colors.light : Colors.dark,
-          },
-        ]}>
-        {children}
-      </Text>
-    </View>
-  );
-}
 
 function App(): React.JSX.Element {
-  const isDarkMode = useColorScheme() === 'dark';
+    const [city, setCity] = useState('paris');
+    const [aqi, setAqi] = useState(0);
+    const [dailyObject, setDailyObject] = useState([]);
 
-  const backgroundStyle = {
-    backgroundColor: isDarkMode ? Colors.darker : Colors.lighter,
-  };
+    function changeCity(newCity: string) {
+        setCity(newCity);
+    }
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const response = await fetch(`https://api.waqi.info/feed/${city}/?token=344b7838d127cdeaee1f42f9cac8208921adfb24`);
+                const json = await response.json();
+                setCity(json.data.city.name);
+                setAqi(json.data.aqi);
+                setDailyObject(json.data.forecast.daily.o3);
+            } catch (error) {
+                console.error('Error:', error);
+            }
+        };
+
+        fetchData();
+    }, [city]);
+
 
   return (
-    <SafeAreaView style={backgroundStyle}>
-      <StatusBar
-        barStyle={isDarkMode ? 'light-content' : 'dark-content'}
-        backgroundColor={backgroundStyle.backgroundColor}
-      />
-      <ScrollView
-        contentInsetAdjustmentBehavior="automatic"
-        style={backgroundStyle}>
-        <Header />
         <View
           style={{
-            backgroundColor: isDarkMode ? Colors.black : Colors.white,
+            display: 'flex',
+              flexDirection: 'column',
+            justifyContent: 'center',
+            alignItems: 'center',
+            backgroundColor: '#212240',
+              height: '100%',
           }}>
-          <Section title="Step One">
-            Edit <Text style={styles.highlight}>App.tsx</Text> to change this
-            screen and then come back to see your edits.
-          </Section>
-          <Section title="See Your Changes">
-            <ReloadInstructions />
-          </Section>
-          <Section title="Debug">
-            <DebugInstructions />
-          </Section>
-          <Section title="Learn More">
-            Read the docs to discover what to do next:
-          </Section>
-          <LearnMoreLinks />
+          <Text style={[styles.highlight, styles.fontSize ]}>Air Quality</Text>
+              <View style={{
+               display: 'flex',
+               flexDirection: 'row',
+              }}>
+                <Button onPress={() => changeCity("lyon")} title="lyon" />
+                <Button onPress={() => changeCity("paris")} title="paris" />
+                <Button onPress={() => changeCity("roanne")} title="roanne" />
+              </View>
+               <AirQuality city={city} aqi={aqi}/>
+                <View style={{marginTop: 20}}>
+                <GraphQuality airQuality={dailyObject}/>
+                </View>
         </View>
-      </ScrollView>
-    </SafeAreaView>
   );
 }
 
@@ -112,6 +100,10 @@ const styles = StyleSheet.create({
   },
   highlight: {
     fontWeight: '700',
+    color: 'white',
+  },
+  fontSize: {
+    fontSize: 40,
   },
 });
 
