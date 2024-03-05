@@ -40,18 +40,6 @@ const styles = StyleSheet.create({
       backgroundColor: 'green',
       width: 300,
     },
-    sectionTitle: {
-      fontSize: 24,
-      fontWeight: '600',
-    },
-    sectionDescription: {
-        textAlign: 'center',
-      fontSize: 20,
-      color: 'white'
-    },
-    highlight: {
-      fontWeight: '700',
-    },
     fontScore: {
       fontSize: 20,
       color: 'white'
