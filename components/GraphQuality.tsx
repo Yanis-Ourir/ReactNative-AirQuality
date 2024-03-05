@@ -29,7 +29,7 @@ function GraphQuality(props: {airQuality: AirQualityArray}) {
     }
 
     // @ts-ignore
-    return <BarChart data={barData}  frontColor={'lightgray'}  />;
+    return <BarChart data={barData} frontColor={'lightgray'} yAxisTextStyle={{color: 'white'}}/>;
 }
 
 export default GraphQuality;
