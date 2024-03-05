@@ -12,8 +12,8 @@ import React from 'react';
 import { useState, useEffect } from 'react';
 
 function AirQuality(props: { city: string, aqi: number}) {
-  const [city, setCity] = useState(props.city ? props.city : 'paris');
-  const [aqi, setAqi] = useState(props.aqi ? props.aqi : 0);
+  const [city, setCity] = useState('paris');
+  const [aqi, setAqi] = useState(0);
   const date = new Date();
 
     useEffect(() => {
