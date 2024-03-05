@@ -5,6 +5,7 @@ import { BarChart } from "react-native-gifted-charts";
 interface AirQualityData {
     avg: number;
     day: string;
+    max: number;
 }
 
 type AirQualityArray = AirQualityData[];
@@ -12,11 +13,13 @@ type AirQualityArray = AirQualityData[];
 function GraphQuality(props: {airQuality: AirQualityArray}) {
     const [airQuality, setAirQuality] =  useState<AirQualityArray>(props.airQuality);
     const [barData, setBarData] = useState<Array<Object>>([]);
+    const date = new Date();
+
 
     useEffect(() => {
         setAirQuality(props.airQuality);
         const newBarData = airQuality.map((element: AirQualityData) => {
-            return {value: element.avg, label: getDayName(new Date(element.day)), labelTextStyle: {color: 'white'}};
+            return {value: element.avg, label: getDayName(new Date(element.day)), labelTextStyle: {color: 'white'}, frontColor: getDayName(new Date(element.day)) === getDayName(date) ? '#177AD5' : ''};
         });
         setBarData(newBarData);
     }, [props.airQuality]);
@@ -26,7 +29,7 @@ function GraphQuality(props: {airQuality: AirQualityArray}) {
     }
 
     // @ts-ignore
-    return <BarChart data={barData}  frontColor={'#177AD5'}  />;
+    return <BarChart data={barData}  frontColor={'lightgray'}  />;
 }
 
 export default GraphQuality;
