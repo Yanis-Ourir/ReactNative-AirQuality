@@ -1,32 +1,26 @@
 import {
-  SafeAreaView,
-  ScrollView,
-  StatusBar,
   StyleSheet,
   Text,
-  useColorScheme,
   View,
 } from 'react-native';
 
 import React from 'react';
 import { useState, useEffect } from 'react';
+import {useSelector} from "react-redux";
 
-function AirQuality(props: { city: string, aqi: number}) {
-  const [city, setCity] = useState('paris');
-  const [aqi, setAqi] = useState(0);
-  const date = new Date();
+function AirQuality() {
+    const airQualityStore = useSelector((state: any) => state.todo);
+    const date = new Date();
 
-    useEffect(() => {
-        setCity(props.city);
-        setAqi(props.aqi);
-    }, [props.city, props.aqi]);
+
 
 
   return (
+
     <View style={styles.sectionContainer}>
       <View>
-        <Text style={[styles.fontScore]}>Score : {aqi}</Text>
-        <Text style={[styles.fontScore]}>{city} </Text>
+        <Text style={[styles.fontScore]}>Score : {airQualityStore.aqi}</Text>
+        <Text style={[styles.fontScore]}>{airQualityStore.city} </Text>
           <Text style={[styles.fontScore]}>Date : {date.toLocaleDateString('FR')}</Text>
       </View>
     </View>

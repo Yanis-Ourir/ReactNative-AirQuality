@@ -1,4 +1,5 @@
 import React, {useEffect, useState} from 'react';
+import {useSelector} from 'react-redux';
 
 import { BarChart } from "react-native-gifted-charts";
 
@@ -10,19 +11,21 @@ interface AirQualityData {
 
 type AirQualityArray = AirQualityData[];
 
-function GraphQuality(props: {airQuality: AirQualityArray}) {
-    const [airQuality, setAirQuality] =  useState<AirQualityArray>(props.airQuality);
+function GraphQuality() {
+    const dataAirQuality = useSelector((state: any) => state.todo);
     const [barData, setBarData] = useState<Array<Object>>([]);
     const date = new Date();
 
 
     useEffect(() => {
-        setAirQuality(props.airQuality);
-        const newBarData = airQuality.map((element: AirQualityData) => {
+        if(dataAirQuality === undefined) {
+            return;
+        }
+        const newBarData = dataAirQuality.dailyObject.map((element: AirQualityData) => {
             return {value: element.avg, label: getDayName(new Date(element.day)), labelTextStyle: {color: 'white'}, frontColor: getDayName(new Date(element.day)) === getDayName(date) ? '#177AD5' : ''};
         });
         setBarData(newBarData);
-    }, [props.airQuality]);
+    }, [dataAirQuality]);
 
     function getDayName(date = new Date(), locale = 'fr-FR') {
         return date.toLocaleDateString(locale, {weekday: 'long'});
